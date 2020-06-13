@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int PLAY_SERVICES_ERROR_CODE = 006;
     private GoogleMap mMap;
     public static final String TAG = "GoogleMaps";
+
+    private final double PAONTA_SAHIB_LAT = 30.443989;
+    private final double PAONTA_SAHIB_LNG = 77.605999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +122,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG,"onMapReady:map is showing on the screen");
 
         mMap = googleMap;
+        gotoLocation(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG);
 
-        MarkerOptions markerOptions = new MarkerOptions()
+        /*MarkerOptions markerOptions = new MarkerOptions()
                 .title("Title")
                 .position(new LatLng(0,0));
-        mMap.addMarker(markerOptions);
+        mMap.addMarker(markerOptions);*/
+    }
+
+    private void gotoLocation(double lat,double lng){
+
+        LatLng latLng = new LatLng(lat,lng);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,15);
+        mMap.moveCamera(cameraUpdate);
     }
 
     @Override
