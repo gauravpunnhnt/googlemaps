@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(lat,lng);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,15);
         mMap.moveCamera(cameraUpdate);
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 
     @Override
@@ -152,10 +153,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        switch (id){
 
+            case R.id.maptype_none:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+                break;
+
+            case R.id.maptype_normal:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+
+            case R.id.maptype_satellite:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+
+            case R.id.maptype_terrain:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+
+            case R.id.maptype_hybrid:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
