@@ -124,10 +124,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         gotoLocation(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG);
 
-        /*MarkerOptions markerOptions = new MarkerOptions()
-                .title("Title")
-                .position(new LatLng(0,0));
-        mMap.addMarker(markerOptions);*/
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(new LatLng(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG));
+        mMap.addMarker(markerOptions);
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
     }
 
     private void gotoLocation(double lat,double lng){
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(lat,lng);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,15);
         mMap.moveCamera(cameraUpdate);
-        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
     @Override
