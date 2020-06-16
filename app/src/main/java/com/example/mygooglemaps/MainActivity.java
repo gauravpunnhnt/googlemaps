@@ -15,6 +15,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 if (mMap != null){
-                    mMap.animateCamera(CameraUpdateFactory.zoomBy(5));
+                    /*mMap.animateCamera(CameraUpdateFactory.zoomBy(5));
 
                     LatLng latLng = new LatLng(28.6139, 77.2090);
 
@@ -72,7 +73,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         public void onCancel() {
 
                         }
-                    });
+                    });*/
+                    double bottomBoundry = PAONTA_SAHIB_LAT - 0.03;
+                    double leftBoudry = PAONTA_SAHIB_LNG - 0.03;
+                    double topBoundry = PAONTA_SAHIB_LAT + 0.03;
+                    double rightBoundry = PAONTA_SAHIB_LNG + 0.03;
+
+                    LatLngBounds PAONTA_BOUNDS = new LatLngBounds(
+                            new LatLng(bottomBoundry,leftBoudry),
+                            new LatLng(topBoundry,rightBoundry)
+                    );
+
+                    mMap.setLatLngBoundsForCameraTarget(PAONTA_BOUNDS);
+                    //mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(PAONTA_BOUNDS,1));
+                    //showMarker(PAONTA_BOUNDS.getCenter());
                 }
             }
         });
@@ -151,9 +165,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         gotoLocation(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG);
 
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(new LatLng(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG));
-        mMap.addMarker(markerOptions);
+        //MarkerOptions markerOptions = new MarkerOptions()
+          //      .position(new LatLng(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG));
+        //mMap.addMarker(markerOptions);
 
         /*mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -167,6 +181,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,14);
         mMap.moveCamera(cameraUpdate);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+    }
+
+    public void showMarker(LatLng latLng){
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        mMap.addMarker(markerOptions);
     }
 
     @Override
