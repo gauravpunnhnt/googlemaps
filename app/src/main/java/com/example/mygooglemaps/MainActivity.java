@@ -50,6 +50,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMap != null){
+                    mMap.animateCamera(CameraUpdateFactory.zoomBy(5));
+
+                    LatLng latLng = new LatLng(28.6139, 77.2090);
+
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,14);
+                    mMap.animateCamera(cameraUpdate, 3000, new GoogleMap.CancelableCallback() {
+                        @Override
+                        public void onFinish() {
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(new LatLng(28.6139, 77.2090));
+                            mMap.addMarker(markerOptions);
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+                    });
+                }
+            }
+        });
+
         initGoogleMap();
 
         SupportMapFragment supportMapFragment = /*SupportMapFragment.newInstance();*/ (SupportMapFragment) getSupportFragmentManager()
@@ -128,15 +155,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(new LatLng(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG));
         mMap.addMarker(markerOptions);
 
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        /*mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.setIndoorEnabled(false);*/
     }
 
     private void gotoLocation(double lat,double lng){
 
         LatLng latLng = new LatLng(lat,lng);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,14);
         mMap.moveCamera(cameraUpdate);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
