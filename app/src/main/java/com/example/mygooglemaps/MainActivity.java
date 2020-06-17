@@ -3,6 +3,8 @@ package com.example.mygooglemaps;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -31,7 +33,14 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -40,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int PLAY_SERVICES_ERROR_CODE = 006;
     private GoogleMap mMap;
     public static final String TAG = "GoogleMaps";
+
+    private ImageButton btnLocate;
+    private EditText etAddress;
 
     private final double PAONTA_SAHIB_LAT = 30.443989;
     private final double PAONTA_SAHIB_LNG = 77.605999;
@@ -51,12 +63,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        etAddress = findViewById(R.id.et_address);
+        btnLocate = findViewById(R.id.btn_locate);
+        btnLocate.setOnClickListener(this::geolocate);
+
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        /*fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mMap != null){
-                    /*mMap.animateCamera(CameraUpdateFactory.zoomBy(5));
+                    mMap.animateCamera(CameraUpdateFactory.zoomBy(5));
 
                     LatLng latLng = new LatLng(28.6139, 77.2090);
 
@@ -73,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         public void onCancel() {
 
                         }
-                    });*/
+                    });
                     double bottomBoundry = PAONTA_SAHIB_LAT - 0.03;
                     double leftBoudry = PAONTA_SAHIB_LNG - 0.03;
                     double topBoundry = PAONTA_SAHIB_LAT + 0.03;
@@ -89,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //showMarker(PAONTA_BOUNDS.getCenter());
                 }
             }
-        });
+        });*/
 
         initGoogleMap();
 
@@ -101,6 +117,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .commit();*/
         supportMapFragment.getMapAsync(this);
     }
+
+    public void geolocate(View view){
+        hideSoftKeyboard(view);
+
+        String locationName = etAddress.getText().toString();
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addressList = geocoder.getFromLocationName(locationName,1);
+
+            if (addressList.size()>0){
+                Address address = addressList.get(0);
+                gotoLocation(address.getLatitude(),address.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(),address.getLongitude())));
+
+                Toast.makeText(this, address.getLocality() ,Toast.LENGTH_SHORT).show();
+
+                Log.d(TAG,"geoLocate: Country: "+address.getLocality());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+    }
+
 
     private void initGoogleMap() {
 
