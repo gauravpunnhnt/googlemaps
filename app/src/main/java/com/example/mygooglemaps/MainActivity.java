@@ -124,16 +124,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String locationName = etAddress.getText().toString();
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-            List<Address> addressList = geocoder.getFromLocationName(locationName,1);
+            List<Address> addressList = geocoder.getFromLocation(PAONTA_SAHIB_LAT,PAONTA_SAHIB_LNG,3);
 
             if (addressList.size()>0){
                 Address address = addressList.get(0);
                 gotoLocation(address.getLatitude(),address.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(new LatLng(address.getLatitude(),address.getLongitude())));
 
-                Toast.makeText(this, address.getLocality() ,Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, address.getLocality(),Toast.LENGTH_SHORT).show();
 
-                Log.d(TAG,"geoLocate: Country: "+address.getLocality());
+                Log.d(TAG,"geoLocate: Locality: "+address.getLocality());
+            }
+
+            for(Address address:addressList){
+                Log.d(TAG,"geoLocate: Address: "+address.getAddressLine(address.getMaxAddressLineIndex()));
             }
         } catch (IOException e) {
             e.printStackTrace();
